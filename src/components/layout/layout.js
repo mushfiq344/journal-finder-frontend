@@ -4,6 +4,7 @@ import Sidebar from "../sidbaer/sidebar";
 import { remoteServer } from '../../../src/variables';
 import { Redirect } from "react-router";
 import Cookies from 'js-cookie'
+import axios from 'axios';
 export const LayoutContext = React.createContext()
 
 export default function Layout({ children }, props) {
@@ -22,42 +23,34 @@ export default function Layout({ children }, props) {
     setLoginDone(true)
   }
   useEffect(() => {
-    let url = remoteServer + 'user';
+    let url = remoteServer + 'userFromJwt';
     let bearer = 'Bearer ' + window.localStorage.getItem("token");
-    fetch(url, {
-      method: 'GET',
+    axios({
+      method: 'post',     //put
+      url: remoteServer + 'auth/userFromJwt',
       headers: {
         'Authorization': bearer,
         'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
-      .then(
-        async (result) => {
-          if (result.token === false) {
-            setToken(false)
-          } else {
-            loggedIn()
-            console.log("at layout", result.user)
-
-            let siteData = {}
-            siteData['user'] = result.user
-            siteData['username'] = result.user.name
-            siteData.token = window.localStorage.getItem("token")
-            siteData.remoteServer = remoteServer;
-            siteData.logOut = logOut
-            setData(siteData)
-          }
-
-
-
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-
+      },
+    })
+      .then(async function (response) {
+        console.log("at layout", response)
+        if (response.status === 200) {
+          loggedIn()
+          let siteData = {}
+          siteData['user'] = response.data.user
+          siteData['username'] = response.data.user.username
+          siteData.token = window.localStorage.getItem("token")
+          siteData.remoteServer = remoteServer;
+          siteData.logOut = logOut
+          setData(siteData)
+        } else {
+          setToken(false)
         }
-      )
+      })
+      .catch(function (error) {
+        setToken(false)
+      });
 
 
   }, []);

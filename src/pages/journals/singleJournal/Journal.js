@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { SingleMovieComments } from "./singleMovieComments";
+
 import '../../../css/movie-server.css';
 import { Redirect } from 'react-router-dom'
-import { SingleMovieData } from './singleMovieData'
-const Movie = (props) => {
+import { SingleJournalData } from './singleJournalData'
+const Journal = (props) => {
 
     const [data, setData] = useState({});
     const [token, setToken] = useState(true);
@@ -13,7 +13,7 @@ const Movie = (props) => {
     // this useEffect will run once
     // similar to componentDidMount()
     useEffect(() => {
-        let url = props.data.remoteServer + 'movie/' + props.slug_name;
+        let url = props.data.remoteServer + 'journal/' + props.id;
         let bearer = 'Bearer ' + props.data.token
         fetch(url, {
             method: 'GET',
@@ -25,12 +25,8 @@ const Movie = (props) => {
             .then(res => res.json())
             .then(
                 (result) => {
-                    console.log("resutl at movie :", result);
-                    if (result.token !== false) {
-                        setData(result);
-                    } else {
-                        setToken(false)
-                    }
+                    console.log("result at journal :", result);
+                    setData(result)
 
                 },
                 // Note: it's important to handle errors here
@@ -38,7 +34,7 @@ const Movie = (props) => {
                 // exceptions from actual bugs in components.
                 (error) => {
                     // the slug is incorrect
-                    console.log("wrong slug", error);
+
 
                     SetWrongSlug(true)
                 }
@@ -51,10 +47,10 @@ const Movie = (props) => {
             <div>
                 {wrongSlug === false ?
                     <div>
-                        <SingleMovieData data={data}></SingleMovieData>
-                        <SingleMovieComments slug_name={props.slug_name} data={props.data}></SingleMovieComments>
+                        <SingleJournalData data={data}></SingleJournalData>
+
                     </div>
-                    : <Redirect to="/films"></Redirect>
+                    : <Redirect to="/journals"></Redirect>
                 }
 
 
@@ -63,4 +59,4 @@ const Movie = (props) => {
     )
 }
 
-export { Movie }
+export { Journal }

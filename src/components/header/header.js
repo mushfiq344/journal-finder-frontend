@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import logo from "../../assets/images/xplex.png";
+import logo from "../../assets/images/logo/compact-logo.png";
 import UserMenu from "./userMenu";
 import Notification from "./notification";
 

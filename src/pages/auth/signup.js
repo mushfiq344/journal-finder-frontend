@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import logo from "../../assets/images/xplex.png";
+import logo from "../../assets/images/endless-logo.png";
 import axios from 'axios';
 import { remoteServer } from "../../variables";
 import { Link } from 'react-router-dom'
@@ -42,21 +42,24 @@ class Signup extends React.Component {
         event.preventDefault();
 
         console.log(this.state.name);
-        const data = new FormData();
-        data.append('name', this.state.name)
-        data.append('email', this.state.email)
-        data.append('password', this.state.password)
-        data.append('password_confirmation', this.state.password_confirmation)
+        const data = {};
+        data['name'] = this.state.name
+        data['username'] = this.state.email
+        data['password'] = this.state.password
+        data['confirm_password'] = this.state.confirm_password
+        data['role'] = "ADMIN"
 
-
-        axios.post(remoteServer + 'register', data, {
-            headers: { "Content-Type": "multipart/form-data", ctype: 'multipart/form-data' }
+        axios({
+            method: 'post',     //put
+            url: remoteServer + 'user',
+            data: data
         })
             .then(function (response) {
                 console.log("at signup", response)
-                if (response.data.token) {
+
+                if (response.status === 201) {
                     console.log(response.data)
-                    window.localStorage.setItem("token", response.data.token);
+                    window.localStorage.setItem("token", response.data);
                     props.loginDone()
 
                 }

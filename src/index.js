@@ -13,7 +13,7 @@ import {
   useHistory,
   useLocation
 } from "react-router-dom";
-import FilmsRoutes from "./pages/films/routes";
+import JournalsRoutes from "./pages/journals/routes";
 //importing authentication pages
 import Signup from "./pages/auth/signup";
 import { LoginIndex } from "./pages/auth/loginIndex";
@@ -25,7 +25,7 @@ function Root() {
       <Switch>
 
         <Route exact path="/">
-          <Redirect to={"/films"} />
+          <Redirect to={"/journals"} />
         </Route>
 
         <Route path="/signup">
@@ -36,8 +36,8 @@ function Root() {
           <LoginIndex></LoginIndex>
 
         </Route>
-        <Route path="/films">
-          <FilmsRoutes></FilmsRoutes>
+        <Route path="/journals">
+          <JournalsRoutes></JournalsRoutes>
         </Route>
       </Switch>
     </Router>

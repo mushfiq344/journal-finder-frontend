@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const SingleMovieData = (props) => {
+const SingleJournalData = (props) => {
 
     let rating = [];
 
@@ -11,10 +11,20 @@ const SingleMovieData = (props) => {
         return rating;
     };
     const genreList = () => {
-        if (props.data.genres) {
-            return props.data.genres.map(item => (
+        if (props.data.categories) {
+            return props.data.categories.map(item => (
                 <li key={item.id} className="list-group mr-2">
                     <span className="badge badge-primary badge-pill">{item.name}</span>
+                </li>
+
+            ))
+        }
+    }
+    const links = () => {
+        if (props.data.links) {
+            return props.data.links.map(item => (
+                <li key={item.id} className="list-group mr-2">
+                    <a href={item.link} target="_blank">{item.name}</a>
                 </li>
 
             ))
@@ -28,19 +38,20 @@ const SingleMovieData = (props) => {
         <div className="col-4 float-left">
             <div className="card">
                 <div className="card-body" height="100%">
-                    <h5 className="card-title">{props.data.name}</h5>
+                    <h5 className="card-title">{props.data.title}</h5>
                     <h6 className="card-subtitle mb-2 text-muted">
                         {ratingStars()}
                     </h6>
                     <h6 className="card-subtitle mb-2 text-muted">
-                        Genres:
+                        Categories:
                             </h6>
                     <ul className="pagination">
                         {genreList()}
                     </ul>
                     <h6 className="card-subtitle mt-2 mb-2 text-muted">
-                        Story:
-                            </h6>
+                        Paper Links:
+                        {links()}
+                    </h6>
 
 
                     <p className="card-text">{props.data.description}</p>
@@ -53,4 +64,4 @@ const SingleMovieData = (props) => {
     </div>)
 }
 
-export { SingleMovieData }
+export { SingleJournalData }

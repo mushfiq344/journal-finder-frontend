@@ -12,7 +12,7 @@ const GenreSelect = (props) => {
 
     useEffect(() => {
         let bearer = 'Bearer ' + props.data.token;
-        fetch(props.data.remoteServer + 'genres', {
+        fetch(props.data.remoteServer + 'category', {
             method: 'GET',
             headers: {
                 'Authorization': bearer,
@@ -22,8 +22,9 @@ const GenreSelect = (props) => {
             .then(res => res.json())
             .then(
                 (result) => {
+                    console.log("categories", result)
                     let genreList = []
-                    result.data.forEach(element => {
+                    result.forEach(element => {
                         let obj = {
                             'value': element.id,
                             'label': element.name

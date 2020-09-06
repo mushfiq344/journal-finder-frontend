@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import logo from "../../assets/images/xplex.png";
+import logo from "../../assets/images/endless-logo.png";
 import axios from 'axios';
 import { remoteServer } from '../../variables';
 import Cookies from 'universal-cookie';
@@ -25,22 +25,24 @@ const Login = (props) => {
     }
 
     const handleSubmit = (event) => {
+
         event.preventDefault();
-        const data = new FormData();
-        data.append('email', email)
-        data.append('password', password)
-        axios.post(`${remoteServer}login`, data, {
-            headers: { "Content-Type": "multipart/form-data", ctype: 'multipart/form-data' }
+        const data = {};
+        data['username'] = email;
+        data['password'] = password;
+        axios({
+            method: 'post',     //put
+            url: remoteServer + 'auth/login',
+            data: {
+                username: email, // This is the body part
+                password: password
+            }
         })
             .then(async function (response) {
-                if (response.data.token) {
+                console.log("at login after submit", response)
+                if (response.status === 200) {
                     console.log(response.data)
                     window.localStorage.setItem("token", response.data.token);
-                    window.localStorage.setItem("user_id", response.data.id);
-                    window.localStorage.setItem("name", response.data.name);
-                    const cookies = new Cookies();
-
-                    cookies.set('__session', response.data.token);
                     props.loginDone();
 
 

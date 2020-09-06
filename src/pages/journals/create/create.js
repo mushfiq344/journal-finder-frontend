@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router";
 
 import axios from 'axios';
-import { MyDropzone } from "./dropzone";
+import { MyDropzone } from "./dropzoneForFiles";
 
 import { GenreSelect } from './select';
 
@@ -33,18 +33,32 @@ class Create extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.getImage = this.getImage.bind(this);
+        this.removeFile = this.removeFile.bind(this);
 
     }
-    // images for preview
+    // files for preview
     async getImage(file) {
+
         await this.setState({
-            files: file.map(file => Object.assign(file, {
+            files: [...this.state.files, file.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file)
-            }))
+            }))]
         });
         console.log("here", this.state.files);
     }
+    // files for delete
+    async removeFile(index) {
+        let filesList = this.state.files
 
+        if (index > -1) { //Make sure item is present in the array, without if condition, -n indexes will be considered from the end of the array.
+            filesList.splice(index, 1);
+        }
+        this.setState({
+            files: filesList
+        });
+
+    }
+    remove
     handleName(event) {
         this.setState({ name: event.target.value });
     }
@@ -96,36 +110,40 @@ class Create extends React.Component {
 
         event.preventDefault()
         const data = new FormData();
-        data.append('name', this.state.name)
-        data.append('slug_name', this.state.slugName.split(" ").join("-"))
-        data.append('description', this.state.description)
+        data.append('title', this.state.name)
+        data.append('user_id', this.props.data.user.userId)
+        // data.append('slug_name', this.state.slugName.split(" ").join("-"))
+        // data.append('description', this.state.description)
         let genreList = [];
-        this.state.genres.forEach(element => {
-            genreList.push(element.value);
-        });
+        if (this.state.genres) {
+            this.state.genres.forEach(element => {
+                genreList.push(element.value);
+            });
+        }
         data.append('genres', genreList)
-        data.append('date', this.state.date)
-        data.append('release', this.state.releaseDate)
-        data.append('country', this.state.country)
-        data.append('ticket', this.state.ticket)
-        data.append('price', this.state.price)
+        // data.append('date', this.state.date)
+        // data.append('release', this.state.releaseDate)
+        // data.append('country', this.state.country)
+        // data.append('ticket', this.state.ticket)
+        // data.append('price', this.state.price)
 
-        data.append('rating', this.state.rating)
-
+        // data.append('rating', this.state.rating)
+        console.log('at submit journal', this.state.files)
         this.state.files.forEach(file => {
-            data.append('myimages[]', file, file.name);
+            console.log(file[0].name)
+            data.append('journals[]', file[0], file[0].name);
         });
         var self = this;
         let bearer = 'Bearer ' + this.props.data.token;
-        axios.post(this.state.remoteServer + 'movieSubmit', data, {
+        axios.post(this.state.remoteServer + 'journal/', data, {
             headers: {
                 "Content-Type": "multipart/form-data", ctype: 'multipart/form-data',
                 'Authorization': bearer
             }
         })
             .then(function (response) {
-                console.log('create', response.data.token)
-                if (response.data.token === false) {
+                console.log('at create', response)
+                if (response.status !== 201) {
                     self.setState({ token: false })
                 } else {
                     self.setState({
@@ -142,13 +160,14 @@ class Create extends React.Component {
                         country: 'asdasd'
 
                     })
+                    alert(response.data)
                 }
-                alert(response.data)
+
 
 
             })
             .catch(function (error) {
-                console.log('error', error)
+                self.setState({ token: false })
             });
 
 
@@ -165,7 +184,7 @@ class Create extends React.Component {
                         <form className="theme-form mega-form" onSubmit={(event) => this.handleSubmit(event)} ctype='multipart/form-data'>
                             <div className="card">
                                 <div className="card-header">
-                                    <h5>Create Movie</h5>
+                                    <h5>Upload Journal</h5>
                                 </div>
                                 <div className="card-body">
 
@@ -174,7 +193,7 @@ class Create extends React.Component {
                                         <label className="col-form-label">Name</label>
                                         < input className="form-control" type="text" value={this.state.name} onChange={this.handleName} placeholder="Enter Name" required />
                                     </div>
-                                    <div className="form-group ">
+                                    {/* <div className="form-group ">
                                         <label className="col-form-label">Slug Name</label>
                                         < input className="form-control" type="text" value={this.state.slugName} onChange={this.handleSlugName} placeholder="Enter Slug Name" required />
                                     </div>
@@ -204,10 +223,10 @@ class Create extends React.Component {
                                     <div className="form-group">
                                         <label className="col-form-label">Price</label>
                                         <input className="form-control" type="number" step="1" value={this.state.price} onChange={this.handlePrice} min="1" placeholder="Insert Price " />
-                                    </div>
+                                    </div> */}
                                     <div className="form-group">
-                                        <label className="col-form-label">Photo</label>
-                                        <MyDropzone files={this.state.files} getImage={this.getImage}></MyDropzone>
+                                        <label className="col-form-label">PDF file</label>
+                                        <MyDropzone files={this.state.files} getImage={this.getImage} removeFile={this.removeFile}></MyDropzone>
 
                                     </div>
                                     <div className="form-group">
@@ -215,10 +234,10 @@ class Create extends React.Component {
                                         <GenreSelect handleGenres={this.handleGenres} genres={this.state.genres} data={this.props.data}></GenreSelect>
 
                                     </div>
-                                    <div className="form-group ">
+                                    {/* <div className="form-group ">
                                         <label className="col-form-label">Country</label>
                                         < input className="form-control" type="text" value={this.state.country} onChange={this.handleCountry} placeholder="Enter Country" required />
-                                    </div>
+                                    </div> */}
 
                                     <hr className="mt-4 mb-4" />
                                 </div>

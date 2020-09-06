@@ -2,12 +2,12 @@ import React, { useState, Children, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch, Link, useRouteMatch, Redirect } from "react-router-dom";
 import Layout from "../../components/layout/layout";
 import Cookies from 'js-cookie'
-import { Create } from './create/create';
-import Index from "./gallery/index";
-import { CreateMovieIndex } from './create/index';
-import { SingleMovieIndex } from "./singleMovie/index";
 
-export default function FilmsRoutes() {
+import Index from "./gallery/index";
+import { CreateJournalIndex } from './create/index';
+import { SingleJournalIndex } from "./singleJournal/index";
+
+export default function JournalsRoutes() {
     const [token, setToken] = useState(true);
 
     useEffect(() => {
@@ -38,10 +38,9 @@ const RouteChildren = () => {
             <Index></Index>
         </Route>
         <Route exact path={`${path}/create`}>
-            <CreateMovieIndex></CreateMovieIndex>
+            <CreateJournalIndex></CreateJournalIndex>
         </Route>
-        <Route path={`${path}/:slug_name`} component={SingleMovieIndex}>
-
+        <Route path={`${path}/:id`} component={SingleJournalIndex}>
         </Route>
     </Switch>)
 }

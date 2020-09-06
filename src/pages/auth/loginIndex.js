@@ -2,38 +2,33 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom'
 import { Login } from "./login";
 import { remoteServer } from '../../variables';
+import axios from 'axios';
 function LoginIndex() {
 
     const [loginOk, setLoginOk] = useState(false)
 
     useEffect(() => {
 
-
-        let url = remoteServer + 'user';
         let bearer = 'Bearer ' + window.localStorage.getItem("token");
-        fetch(url, {
-            method: 'GET',
+        axios({
+            method: 'post',     //put
+            url: remoteServer + 'auth/userFromJwt',
             headers: {
                 'Authorization': bearer,
                 'Content-Type': 'application/json'
-            }
-        }).then(res => res.json())
-            .then(
-                async (result) => {
-                    console.log('login index', result)
-                    if (result.token !== false) {
-                        setLoginOk(true);
-                    }
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-
+            },
+        })
+            .then(async function (response) {
+                console.log("at login Index", response)
+                if (response.status === 200) {
+                    setLoginOk(true);
+                } else {
+                    setLoginOk(false)
                 }
-            )
-
-
+            })
+            .catch(function (error) {
+                setLoginOk(false);
+            });
     }, []);
 
     const loginDone = () => {
@@ -41,7 +36,7 @@ function LoginIndex() {
         setLoginOk(true);
     }
     console.log("loginok", loginOk)
-    return (loginOk === true ? <Redirect to="/films"></Redirect> : <Login loginDone={loginDone}></Login>)
+    return (loginOk === true ? <Redirect to="/journals"></Redirect> : <Login loginDone={loginDone}></Login>)
 }
 
 export { LoginIndex }

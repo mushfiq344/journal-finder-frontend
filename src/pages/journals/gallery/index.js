@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MovieList from "./movieList";
+import JournalList from "./JournalList"
 import { remoteServer } from "../../../variables";
 import { LayoutContext } from "../../../components/layout/layout"
 export default function Index() {
@@ -10,7 +10,9 @@ export default function Index() {
     <LayoutContext.Consumer>
       {data => {
         return (
-          <MovieList data={data}></MovieList>
+
+          // <JournalList data={data}></JournalList>
+          <JournalList data={data}></JournalList>
         )
       }}
     </LayoutContext.Consumer>

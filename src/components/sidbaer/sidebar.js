@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import logo from "../../assets/images/xplex-dark.png";
+import logo from "../../assets/images/logo-light.png";
 import logo_compact from "../../assets/images/logo/compact-logo.png";
 
 import UserPanel from "./userPanel";

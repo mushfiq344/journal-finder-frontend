@@ -39,14 +39,14 @@ import {
 
 export const MENUITEMS = [
   {
-    title: "Films",
+    title: "Journals",
     icon: Home,
     type: "sub",
     badgeType: "primary",
     active: false,
     children: [
-      { path: "/films", title: "Films List", type: "link" },
-      { path: "/films/create", title: "Create Movie", type: "link" }
+      { path: "/journals", title: "Journals List", type: "link" },
+      { path: "/journals/create", title: "Create Journal", type: "link" }
 
     ],
   }

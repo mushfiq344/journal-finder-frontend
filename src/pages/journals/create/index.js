@@ -3,7 +3,7 @@ import React from "react";
 import { LayoutContext } from "../../../components/layout/layout"
 import { Create } from "./create";
 
-const CreateMovieIndex = (props) => {
+const CreateJournalIndex = (props) => {
 
     return (
 
@@ -20,4 +20,4 @@ const CreateMovieIndex = (props) => {
     )
 }
 
-export { CreateMovieIndex }
+export { CreateJournalIndex }
